@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Events\SendMessageEvent;
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Support\Facades\Broadcast;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate;
@@ -13,18 +12,19 @@ use Livewire\Component;
 
 class Chat extends Component
 {
-    public $user;
+    public $senderId;
+    public User $user;
     public $oneTimeMessage;
     public $users = [];
     public $messages = [];
 
-    public function mount() {
-//        $this->user = auth()->user();
+    public function mount($userId) {
+        $this->user = User::find($userId);
+        $this->senderId = auth()->user()->id;
         $this->users = User::where('id', '!=', auth()->user()->id)->get();
     }
 
     public function selectUser($selectedUser) {
-        $this->user = User::find($selectedUser['id']);
         $this->messages = Message::where(function ($q) use ($selectedUser) {
             $q->where('sender_id', auth()->id())->where('receiver_id', $selectedUser['id']);
         })->orWhere(function ($q) use ($selectedUser) {
@@ -42,9 +42,8 @@ class Chat extends Component
         $this->messages[] = $message;
     }
 
-
-    #[On('echo-private:send-message,SendMessageEvent')]
-    public function listenMessage($event) {
+    #[On('echo-private:send-message.{senderId},SendMessageEvent')]
+    public function listenMessage($event): void {
         $this->messages[] = Message::find($event['message']['id']);
     }
 
