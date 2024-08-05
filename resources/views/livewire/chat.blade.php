@@ -84,13 +84,32 @@
                                 </div>
                             @endif
                         @endforeach
+                        @if($typing)
+                            <div class="flex mb-4 cursor-pointer">
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center mr-2">
+                                    <img
+                                        src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
+                                        alt="User Avatar" class="w-8 h-8 rounded-full">
+                                </div>
+                                <div class="chat-bubble">
+                                    <div class="typing">
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Chat Input -->
                     <footer x-data
                             class="bg-white border-t border-gray-300 p-4 absolute bottom-0 left-0 right-0 w-full">
                         <div class="flex items-center">
-                            <input wire:model="oneTimeMessage" type="text" placeholder="Type a message..."
+                            <input wire:model="oneTimeMessage"
+                                   type="text"
+                                   id="oneTimeMessage"
+                                   placeholder="Type a message..."
                                    class="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500">
                             <button wire:click="sendMessage"
                                     class="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2">
