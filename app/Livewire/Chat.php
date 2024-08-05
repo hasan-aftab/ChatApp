@@ -13,18 +13,18 @@ use Livewire\Component;
 class Chat extends Component
 {
     public $senderId;
-    public User $user;
+    public $user;
     public $oneTimeMessage;
     public $users = [];
     public $messages = [];
 
-    public function mount($userId) {
-        $this->user = User::find($userId);
+    public function mount() {
         $this->senderId = auth()->user()->id;
         $this->users = User::where('id', '!=', auth()->user()->id)->get();
     }
 
     public function selectUser($selectedUser) {
+        $this->user = User::find($selectedUser['id']);
         $this->messages = Message::where(function ($q) use ($selectedUser) {
             $q->where('sender_id', auth()->id())->where('receiver_id', $selectedUser['id']);
         })->orWhere(function ($q) use ($selectedUser) {
